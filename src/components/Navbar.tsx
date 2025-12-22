@@ -52,14 +52,6 @@ export default function PublicNavbar() {
             href="/" 
             className="flex items-center gap-2 group transition-all"
           >
-            <div className="flex flex-col items-end mr-1">
-              <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 leading-none">
-                Account
-              </span>
-              <span className="text-xs font-bold text-gray-800">
-                {session.user?.email?.split('@')[0]}
-              </span>
-            </div>
             <div className="bg-gray-50 p-2 rounded-xl text-gray-700 group-hover:bg-red-50 group-hover:text-red-600 border border-gray-100">
               <UserCircle size={28} />
             </div>
