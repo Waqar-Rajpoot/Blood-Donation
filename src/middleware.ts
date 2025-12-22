@@ -73,9 +73,7 @@ export default withAuth(
     const token = req.nextauth.token;
     const { pathname } = req.nextUrl;
 
-    // 1. Redirect logged-in users away from Login/Signup pages
     if (token && (pathname === "/login" || pathname === "/signup" || pathname === "/verifyemail" || pathname === "/")) {
-      // Redirect based on role if they try to go back to login
       if (token.role === "admin") return NextResponse.redirect(new URL("/admin", req.url));
       if (token.role === "donor") return NextResponse.redirect(new URL("/donor", req.url));
       if (token.role === "receiver") return NextResponse.redirect(new URL("/receiver", req.url));

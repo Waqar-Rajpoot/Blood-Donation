@@ -42,6 +42,10 @@ export const authOptions: NextAuthOptions = {
             throw new Error("Invalid passwrod")
           }
 
+          if (!user.isVerified) {
+            throw new Error("Please wait for admin to verify your account");
+          }
+
           return {
             id: user._id.toString(),
             email: user.email,
