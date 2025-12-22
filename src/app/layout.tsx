@@ -48,6 +48,7 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { usePathname } from "next/navigation";
 import PublicNavbar from "@/components/Navbar";
+import AuthProvider from "@/components/AuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -79,6 +80,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-black`}
         cz-shortcut-listen="true"
       >
+        <AuthProvider>
+
         <Toaster position="top-center" reverseOrder={false} />
         
         {/* Render PublicNavbar only on non-dashboard routes */}
@@ -96,6 +99,7 @@ export default function RootLayout({
             </p>
           </footer>
         )}
+        </AuthProvider>
       </body>
     </html>
   );
