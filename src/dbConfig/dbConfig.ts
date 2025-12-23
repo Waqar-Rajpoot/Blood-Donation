@@ -116,6 +116,8 @@ export async function connect() {
   if (!cached?.promise) {
     const opts = {
       bufferCommands: false, // Recommended for serverless/Next.js
+      serverSelectionTimeoutMS: 5000, // Fail after 5s instead of 30s
+      family: 4,
     };
 
     cached!.promise = mongoose.connect(MONGODB_URI, opts).then((mongooseInstance) => {
