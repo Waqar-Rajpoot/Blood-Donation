@@ -90,9 +90,11 @@ import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 
 // Establish database connection
-await connect();
 
 export async function POST(request: NextRequest) {
+  
+  await connect();
+
   try {
     const reqBody = await request.json();
     const { 
