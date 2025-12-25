@@ -42,63 +42,104 @@
 
 
 
-"use client";
+// "use client";
+// import { Geist, Geist_Mono } from "next/font/google";
+// import "./globals.css";
+// import { Toaster } from "react-hot-toast";
+// import { usePathname } from "next/navigation";
+// import PublicNavbar from "@/components/Navbar";
+// import AuthProvider from "@/components/AuthProvider";
+
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
+
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
+
+// export default function RootLayout({
+//   children,
+// }: Readonly<{
+//   children: React.ReactNode;
+// }>) {
+//   const pathname = usePathname();
+
+//   // Define the dashboard segments
+//   // If the URL starts with any of these, we hide the Public Navbar
+//   const hidePublicNav = 
+//     pathname.startsWith("/admin") || 
+//     pathname.startsWith("/donor") || 
+//     pathname.startsWith("/receiver");
+
+//   return (
+//     <html lang="en">
+//       <body
+//         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-black`}
+//         cz-shortcut-listen="true"
+//       >
+//         <AuthProvider>
+
+//         <Toaster position="top-center" reverseOrder={false} />
+        
+//         {/* Render PublicNavbar only on non-dashboard routes */}
+//         {!hidePublicNav && <PublicNavbar />}
+
+//         <main className="min-h-screen">
+//           {children}
+//         </main>
+
+//         {/* Optional: Add a Public Footer only on non-dashboard routes */}
+//         {!hidePublicNav && (
+//           <footer className="py-10 border-t border-gray-100 bg-gray-50 text-center">
+//             <p className="text-gray-400 text-sm font-medium">
+//               © 2025 LifeFlow Management System. Saving lives through technology.
+//             </p>
+//           </footer>
+//         )}
+//         </AuthProvider>
+//       </body>
+//     </html>
+//   );
+// }
+
+
+
+
+
+
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "react-hot-toast";
-import { usePathname } from "next/navigation";
-import PublicNavbar from "@/components/Navbar";
 import AuthProvider from "@/components/AuthProvider";
+import LayoutContent from "@/components/LayoutContent";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// This is the "Production Fix" for mobile responsiveness
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: "#ffffff",
+};
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  const pathname = usePathname();
+export const metadata: Metadata = {
+  title: "LifeFlow | Management System",
+  description: "Saving lives through technology",
+};
 
-  // Define the dashboard segments
-  // If the URL starts with any of these, we hide the Public Navbar
-  const hidePublicNav = 
-    pathname.startsWith("/admin") || 
-    pathname.startsWith("/donor") || 
-    pathname.startsWith("/receiver");
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-black`}
-        cz-shortcut-listen="true"
+    <html lang="en" className="scroll-smooth">
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-black min-h-screen`}
+      cz-shortcut-listen="true"
       >
         <AuthProvider>
-
-        <Toaster position="top-center" reverseOrder={false} />
-        
-        {/* Render PublicNavbar only on non-dashboard routes */}
-        {!hidePublicNav && <PublicNavbar />}
-
-        <main className="min-h-screen">
-          {children}
-        </main>
-
-        {/* Optional: Add a Public Footer only on non-dashboard routes */}
-        {!hidePublicNav && (
-          <footer className="py-10 border-t border-gray-100 bg-gray-50 text-center">
-            <p className="text-gray-400 text-sm font-medium">
-              © 2025 LifeFlow Management System. Saving lives through technology.
-            </p>
-          </footer>
-        )}
+          <LayoutContent>{children}</LayoutContent>
         </AuthProvider>
       </body>
     </html>
