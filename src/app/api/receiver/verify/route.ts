@@ -4,13 +4,12 @@ import Donation from "@/models/donationModel";
 import Request from "@/models/requestModel";
 import User from "@/models/userModel";
 
-connect();
 
 export async function POST(request: NextRequest) {
     try {
+        await connect();
         const { requestId, donorId } = await request.json();
 
-        // 1. Fetch the original request to get hospital details
         const bloodRequest = await Request.findById(requestId);
         if (!bloodRequest) throw new Error("Request not found");
 

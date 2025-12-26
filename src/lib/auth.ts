@@ -5,41 +5,100 @@ import User from "@/models/userModel";
 import bcrypt from "bcryptjs";
 
 export const authOptions: NextAuthOptions = {
+  // providers: [
+  //   CredentialsProvider({
+  //     id: "credentials",
+  //     name: "Credentials",
+  //     credentials: {
+  //       identifier: {
+  //         label: "Email or Username",
+  //         type: "email",
+  //         placeholder: "Email or Username",
+  //       },
+  //       password: {
+  //         label: "Password",
+  //         type: "password",
+  //         placeholder: "Password",
+  //       },
+  //     },
+  //     async authorize(credentials) {
+  //       if (!credentials?.identifier || !credentials?.password) {
+  //         throw new Error("Please enter email or username and password");
+  //       }
+
+  //       try {
+  //         await connect();
+  //         // const user = await User.findOne({ email: credentials.email });
+
+  //         const user = await User.findOne({
+  //           $or: [{ email: credentials.identifier }, { username: credentials.identifier }],
+  //         });
+
+  //         if (!user) {
+  //           throw new Error("User not found");
+  //         }
+  //         const isPasswordCorrect = await bcrypt.compare(
+  //           credentials.password,
+  //           user.password
+  //         );
+
+  //         if (!isPasswordCorrect) {
+  //           throw new Error("Invalid passwrod");
+  //         }
+
+  //         if (!user.isVerified) {
+  //           throw new Error("Please wait for admin to verify your account");
+  //         }
+
+  //         return {
+  //           id: user._id.toString(),
+  //           email: user.email,
+  //           role: user.role,
+  //         };
+  //       } catch (err: any) {
+  //         console.log("Auth Error: ", err);
+  //         throw new Error(err);
+  //       }
+  //     },
+  //   }),
+  // ],
+  
   providers: [
     CredentialsProvider({
       id: "credentials",
       name: "Credentials",
       credentials: {
-        email: {
-          label: "Email",
-          type: "email",
-          placeholder: "Email",
-        },
-        password: {
-          label: "Password",
-          type: "password",
-          placeholder: "Password",
-        },
+        identifier: { label: "Email or Username", type: "text" }, // Changed type to "text"
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Missing email or password");
+        if (!credentials?.identifier || !credentials?.password) {
+          throw new Error("Please enter email or username and password");
         }
 
         try {
           await connect();
-          const user = await User.findOne({ email: credentials.email });
+
+          // Find user by either email OR username
+          const user = await User.findOne({
+            $or: [
+              { email: credentials.identifier.toLowerCase() }, // Case-insensitive logic helps here
+              { username: credentials.identifier },
+            ],
+          });
 
           if (!user) {
-            throw new Error("User not found");
+            // Security Tip: Generic error messages prevent user enumeration
+            throw new Error("Invalid credentials"); 
           }
+
           const isPasswordCorrect = await bcrypt.compare(
             credentials.password,
             user.password
           );
 
           if (!isPasswordCorrect) {
-            throw new Error("Invalid passwrod")
+            throw new Error("Invalid credentials");
           }
 
           if (!user.isVerified) {
@@ -49,11 +108,12 @@ export const authOptions: NextAuthOptions = {
           return {
             id: user._id.toString(),
             email: user.email,
+            username: user.username, // Added username to return object
             role: user.role,
-          }
+          };
         } catch (err: any) {
-            console.log("Auth Error: ", err)
-          throw new Error(err);
+          // Re-throw the specific error message to be caught by the UI
+          throw new Error(err.message || "Authentication failed");
         }
       },
     }),
@@ -68,15 +128,15 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-        session.user.id = token.id as string; 
-        session.user.role = token.role as string;
-        session.user.email = token.email as string;
+      session.user.id = token.id as string;
+      session.user.role = token.role as string;
+      session.user.email = token.email as string;
       return session;
     },
   },
   pages: {
     signIn: "/login",
-    error: "/login", 
+    error: "/login",
   },
   session: {
     strategy: "jwt",

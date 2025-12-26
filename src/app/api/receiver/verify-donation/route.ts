@@ -4,10 +4,9 @@ import Donation from "@/models/donationModel";
 import Request from "@/models/requestModel"; // Your blood request model
 import User from "@/models/userModel";
 
-connect();
-
 export async function POST(req: Request) {
     try {
+        await connect();
         const { requestId, donorId, units } = await req.json();
 
         // 1. Create the official Donation Record

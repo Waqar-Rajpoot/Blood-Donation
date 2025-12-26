@@ -1,120 +1,18 @@
 // "use client";
-// import React from "react";
+// import React, { useState, useEffect } from "react";
 // import Link from "next/link";
 // import { usePathname } from "next/navigation";
+// import { signOut } from "next-auth/react";
 // import { 
-//   LayoutDashboard, 
-//   Users, 
-//   ClipboardList, 
-//   LogOut, 
-//   ShieldCheck,
-//   Menu,
-//   X
+//   LayoutDashboard, Users, ClipboardList, LogOut, 
+//   ShieldCheck, Menu, X, FileBarChart, UserCheck 
 // } from "lucide-react";
 
 // export default function AdminNavbar() {
 //   const pathname = usePathname();
-//   const [isOpen, setIsOpen] = React.useState(false);
+//   const [isOpen, setIsOpen] = useState(false);
 
-//   const navItems = [
-//     { name: "Dashboard", href: "/admin", icon: <LayoutDashboard size={20} /> },
-//     { name: "User Management", href: "/admin/users", icon: <Users size={20} /> },
-//     { name: "Request Logs", href: "/admin/requests", icon: <ClipboardList size={20} /> },
-//   ];
-
-//   return (
-//     <>
-//       {/* Mobile Toggle */}
-//       <div className="lg:hidden bg-white p-4 border-b flex justify-between items-center sticky top-0 z-50">
-//         <div className="flex items-center gap-2 text-red-600 font-bold">
-//           <ShieldCheck /> Admin Panel
-//         </div>
-//         <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600">
-//           {isOpen ? <X /> : <Menu />}
-//         </button>
-//       </div>
-
-//       {/* Sidebar Navigation */}
-//       <aside className={`
-//         fixed inset-y-0 left-0 z-40 w-64 bg-white border-r transform transition-transform duration-300 ease-in-out lg:translate-x-0
-//         ${isOpen ? "translate-x-0" : "-translate-x-full"}
-//       `}>
-//         <div className="h-full flex flex-col p-6">
-//           {/* Logo Section */}
-//           <div className="flex items-center gap-3 px-2 mb-10">
-//             <div className="bg-red-600 p-2 rounded-xl text-white">
-//               <ShieldCheck size={24} />
-//             </div>
-//             <span className="font-black text-xl tracking-tight text-gray-800">AdminHub</span>
-//           </div>
-
-//           {/* Nav Links */}
-//           <nav className="flex-1 space-y-2">
-//             {navItems.map((item) => {
-//               const isActive = pathname === item.href;
-//               return (
-//                 <Link
-//                   key={item.name}
-//                   href={item.href}
-//                   onClick={() => setIsOpen(false)}
-//                   className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
-//                     isActive 
-//                       ? "bg-red-50 text-red-600 shadow-sm shadow-red-100" 
-//                       : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-//                   }`}
-//                 >
-//                   {item.icon}
-//                   {item.name}
-//                 </Link>
-//               );
-//             })}
-//           </nav>
-
-//           {/* Bottom Actions */}
-//           <div className="border-t pt-6">
-//             <button className="flex items-center gap-3 px-4 py-3 w-full text-gray-500 font-bold hover:text-red-600 transition-colors">
-//               <LogOut size={20} />
-//               Logout
-//             </button>
-//           </div>
-//         </div>
-//       </aside>
-
-//       {/* Overlay for mobile */}
-//       {isOpen && (
-//         <div 
-//           className="fixed inset-0 bg-black/20 z-30 lg:hidden" 
-//           onClick={() => setIsOpen(false)}
-//         />
-//       )}
-//     </>
-//   );
-// }
-
-
-
-
-
-// "use client";
-// import React from "react";
-// import Link from "next/link";
-// import { usePathname } from "next/navigation";
-// import { signOut } from "next-auth/react"; // Import NextAuth signOut
-// import { 
-//   LayoutDashboard, 
-//   Users, 
-//   ClipboardList, 
-//   LogOut, 
-//   ShieldCheck,
-//   Menu,
-//   X,
-//   FileBarChart,
-//   UserCheck
-// } from "lucide-react";
-
-// export default function AdminNavbar() {
-//   const pathname = usePathname();
-//   const [isOpen, setIsOpen] = React.useState(false);
+//   useEffect(() => setIsOpen(false), [pathname]);
 
 //   const navItems = [
 //     { name: "Dashboard", href: "/admin", icon: <LayoutDashboard size={20} /> },
@@ -124,83 +22,78 @@
 //     { name: "Analytics Reports", href: "/admin/reports", icon: <FileBarChart size={20} /> },
 //   ];
 
-//   // Logout Handler
-//   const handleLogout = async () => {
-//     await signOut({ callbackUrl: "/login" });
-//   };
-
 //   return (
 //     <>
-//       {/* Mobile Toggle */}
-//       <div className="lg:hidden bg-white p-4 border-b flex justify-between items-center sticky top-0 z-50">
+//       {/* MOBILE TOP BAR - Only visible on small screens */}
+//       <div className="lg:hidden flex items-center justify-between bg-white p-4 border-b sticky top-0 z-50 w-full">
 //         <div className="flex items-center gap-2 text-red-600 font-bold">
-//           <ShieldCheck /> Admin Panel
+//           <ShieldCheck size={24} />
+//           <span>AdminHub</span>
 //         </div>
-//         <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600">
-//           {isOpen ? <X /> : <Menu />}
+//         <button onClick={() => setIsOpen(!isOpen)} className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+//           {isOpen ? <X size={24} /> : <Menu size={24} />}
 //         </button>
 //       </div>
 
-//       {/* Sidebar Navigation */}
+//       {/* SIDEBAR */}
 //       <aside className={`
-//         fixed inset-y-0 left-0 z-40 w-64 bg-white border-r transform transition-transform duration-300 ease-in-out lg:translate-x-0
+//         fixed inset-y-0 left-0 z-50 w-64 bg-white border-r transform transition-transform duration-300 ease-in-out
+//         lg:translate-x-0 lg:static lg:inset-0
 //         ${isOpen ? "translate-x-0" : "-translate-x-full"}
 //       `}>
-//         <div className="h-full flex flex-col p-6">
-//           {/* Logo Section */}
+//         <div className="h-full flex flex-col p-6 overflow-y-auto">
+//           {/* Sidebar Logo */}
 //           <div className="flex items-center gap-3 px-2 mb-10">
-//             <div className="bg-red-600 p-2 rounded-xl text-white">
+//             <div className="bg-red-600 p-2 rounded-xl text-white shadow-md">
 //               <ShieldCheck size={24} />
 //             </div>
-//             <span className="font-black text-xl tracking-tight text-gray-800">AdminHub</span>
+//             <span className="font-bold text-xl text-gray-800">AdminHub</span>
 //           </div>
 
-//           {/* Nav Links */}
-//           <nav className="flex-1 space-y-2">
+//           {/* Navigation Items */}
+//           <nav className="flex-1 space-y-1">
 //             {navItems.map((item) => {
 //               const isActive = pathname === item.href;
 //               return (
 //                 <Link
 //                   key={item.name}
 //                   href={item.href}
-//                   onClick={() => setIsOpen(false)}
 //                   className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
 //                     isActive 
-//                       ? "bg-red-50 text-red-600 shadow-sm shadow-red-100" 
+//                       ? "bg-red-50 text-red-600" 
 //                       : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
 //                   }`}
 //                 >
 //                   {item.icon}
-//                   {item.name}
+//                   <span className="text-sm">{item.name}</span>
 //                 </Link>
 //               );
 //             })}
 //           </nav>
 
-//           {/* Bottom Actions */}
-//           <div className="border-t pt-6">
+//           {/* Logout Section */}
+//           <div className="mt-auto pt-6 border-t">
 //             <button 
-//               onClick={handleLogout}
+//               onClick={() => signOut({ callbackUrl: "/login" })}
 //               className="flex items-center gap-3 px-4 py-3 w-full text-gray-500 font-bold hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
 //             >
 //               <LogOut size={20} />
-//               Logout
+//               <span className="text-sm">Logout</span>
 //             </button>
 //           </div>
 //         </div>
 //       </aside>
 
-//       {/* Overlay for mobile */}
+//       {/* BACKDROP - Only visible when menu is open on mobile */}
 //       {isOpen && (
 //         <div 
-//           className="fixed inset-0 bg-black/20 z-30 lg:hidden" 
+//           className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 lg:hidden" 
 //           onClick={() => setIsOpen(false)}
 //         />
 //       )}
 //     </>
 //   );
 // }
-
 
 
 
@@ -221,7 +114,6 @@ export default function AdminNavbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
-  // Close sidebar when clicking a link on mobile
   useEffect(() => setIsOpen(false), [pathname]);
 
   const navItems = [
@@ -234,7 +126,7 @@ export default function AdminNavbar() {
 
   return (
     <>
-      {/* MOBILE TOP BAR - Only visible on small screens */}
+      {/* MOBILE TOP BAR */}
       <div className="lg:hidden flex items-center justify-between bg-white p-4 border-b sticky top-0 z-50 w-full">
         <div className="flex items-center gap-2 text-red-600 font-bold">
           <ShieldCheck size={24} />
@@ -261,7 +153,7 @@ export default function AdminNavbar() {
           </div>
 
           {/* Navigation Items */}
-          <nav className="flex-1 space-y-1">
+          <nav className="space-y-1">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -279,22 +171,20 @@ export default function AdminNavbar() {
                 </Link>
               );
             })}
-          </nav>
 
-          {/* Logout Section */}
-          <div className="mt-auto pt-6 border-t">
+            {/* Logout Button - Now inside the nav list */}
             <button 
               onClick={() => signOut({ callbackUrl: "/login" })}
-              className="flex items-center gap-3 px-4 py-3 w-full text-gray-500 font-bold hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
+              className="flex items-center gap-3 px-4 py-3 w-full text-gray-500 font-bold hover:text-red-600 hover:bg-red-50 rounded-xl transition-all mt-2 hover:cursor-pointer"
             >
               <LogOut size={20} />
               <span className="text-sm">Logout</span>
             </button>
-          </div>
+          </nav>
         </div>
       </aside>
 
-      {/* BACKDROP - Only visible when menu is open on mobile */}
+      {/* BACKDROP */}
       {isOpen && (
         <div 
           className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 lg:hidden" 
