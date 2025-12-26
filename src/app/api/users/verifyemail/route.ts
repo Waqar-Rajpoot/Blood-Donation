@@ -2,13 +2,13 @@ import { connect } from "@/dbConfig/dbConfig";
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/userModel";
 
-connect();
 
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
     const { token } = reqBody;
     console.log(token);
+    await connect();
 
     const user = await User.findOne({
       verifyToken: token,
@@ -24,7 +24,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log(user);
 
     user.isVerified = true;
     user.verifyToken = undefined;

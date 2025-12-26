@@ -2,10 +2,9 @@ import { connect } from "@/dbConfig/dbConfig";
 import Request from "@/models/requestModel";
 import { NextResponse } from "next/server";
 
-connect();
-
 export async function GET() {
     try {
+        await connect();
         const requests = await Request.find({}).sort({ createdAt: -1 });
 
         // Calculate summary for the top cards

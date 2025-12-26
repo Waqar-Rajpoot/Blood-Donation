@@ -4,8 +4,6 @@ import { NextResponse, NextRequest } from "next/server";
 import Request from "@/models/requestModel";
 import { connect } from "@/dbConfig/dbConfig";
 
-connect();
-
 export async function POST(request: NextRequest) {
   try {
     // 1. Get the current logged-in user session
@@ -13,6 +11,7 @@ export async function POST(request: NextRequest) {
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
+    await connect();
 
     const reqBody = await request.json();
     const {

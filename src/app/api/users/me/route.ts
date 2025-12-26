@@ -5,10 +5,9 @@ import User from "@/models/userModel";
 import Request from "@/models/requestModel";
 import { connect } from "@/dbConfig/dbConfig";
 
-connect();
-
 export async function GET() {
     try {
+        await connect();
         const session = await getServerSession(authOptions);
 
         if (!session || !session.user) {

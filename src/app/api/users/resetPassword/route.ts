@@ -3,14 +3,9 @@ import User from "@/models/userModel";
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 
-connect();
-
 export async function POST(req: NextRequest) {
   const reqBody = await req.json();
   const { token, newPassword } = reqBody;
-
-  console.log("token: ", token);
-  console.log("newPassword: ", newPassword);
 
   try {
     if (!token && !newPassword) {
@@ -19,6 +14,8 @@ export async function POST(req: NextRequest) {
         status: 400,
       });
     }
+
+    await connect();
     const user = await User.findOne({
       forgotPasswordToken: token,
       forgotPasswordTokenExpiry: { $gt: Date.now() },
@@ -42,7 +39,6 @@ export async function POST(req: NextRequest) {
     user.forgotPasswordTokenExpiry = undefined;
     await user.save();
 
-    console.log(user);
     return NextResponse.json({
       message: "Password reset successfully",
       success: true,

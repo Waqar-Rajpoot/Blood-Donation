@@ -9,7 +9,6 @@ export default function Hero() {
   const [latestRequest, setLatestRequest] = useState<{patientName: string, bloodGroup: string} | null>(null);
 
 
-  // Fetch the single most recent urgent request for the "Live Ticker"
   useEffect(() => {
     const fetchLatest = async () => {
       try {

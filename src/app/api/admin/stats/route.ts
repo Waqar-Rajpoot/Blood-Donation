@@ -4,11 +4,11 @@ import Request from "@/models/requestModel";
 import { NextResponse } from "next/server";
 import { redis } from "@/lib/redis";
 
-await connect();
 
 export async function GET() {
     try {
-
+        
+        await connect();
         const cachedStats = await redis.get("admin_stats");
 
         if (cachedStats) {

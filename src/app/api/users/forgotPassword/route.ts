@@ -3,10 +3,10 @@ import { sendEmail } from "@/helpers/mailer";
 import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 
-connect();
 
 export async function POST(req: NextRequest) {
   try {
+    await connect();
     const reqBody = await req.json();
     const { email } = reqBody;
     console.log(email);

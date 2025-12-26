@@ -5,64 +5,6 @@ import User from "@/models/userModel";
 import bcrypt from "bcryptjs";
 
 export const authOptions: NextAuthOptions = {
-  // providers: [
-  //   CredentialsProvider({
-  //     id: "credentials",
-  //     name: "Credentials",
-  //     credentials: {
-  //       identifier: {
-  //         label: "Email or Username",
-  //         type: "email",
-  //         placeholder: "Email or Username",
-  //       },
-  //       password: {
-  //         label: "Password",
-  //         type: "password",
-  //         placeholder: "Password",
-  //       },
-  //     },
-  //     async authorize(credentials) {
-  //       if (!credentials?.identifier || !credentials?.password) {
-  //         throw new Error("Please enter email or username and password");
-  //       }
-
-  //       try {
-  //         await connect();
-  //         // const user = await User.findOne({ email: credentials.email });
-
-  //         const user = await User.findOne({
-  //           $or: [{ email: credentials.identifier }, { username: credentials.identifier }],
-  //         });
-
-  //         if (!user) {
-  //           throw new Error("User not found");
-  //         }
-  //         const isPasswordCorrect = await bcrypt.compare(
-  //           credentials.password,
-  //           user.password
-  //         );
-
-  //         if (!isPasswordCorrect) {
-  //           throw new Error("Invalid passwrod");
-  //         }
-
-  //         if (!user.isVerified) {
-  //           throw new Error("Please wait for admin to verify your account");
-  //         }
-
-  //         return {
-  //           id: user._id.toString(),
-  //           email: user.email,
-  //           role: user.role,
-  //         };
-  //       } catch (err: any) {
-  //         console.log("Auth Error: ", err);
-  //         throw new Error(err);
-  //       }
-  //     },
-  //   }),
-  // ],
-  
   providers: [
     CredentialsProvider({
       id: "credentials",

@@ -30,8 +30,6 @@ export default function Map({ donors }: MapProps) {
       />
       
       {donors.map((donor) => (
-        // Note: In a real app, you'd store lat/lng in your Donor model
-        // For now, we use a mock offset based on index if lat/lng isn't in DB
         <Marker 
           key={donor._id} 
           position={[31.5204 + (Math.random() - 0.5) * 0.1, 74.3587 + (Math.random() - 0.5) * 0.1]} 

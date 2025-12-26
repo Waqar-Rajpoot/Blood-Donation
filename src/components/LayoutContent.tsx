@@ -12,7 +12,6 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
       <Toaster position="top-center" />
       {!hidePublicNav && <PublicNavbar />}
       
-      {/* max-w-7xl prevents the site from looking stretched on wide monitors */}
       <main className={`flex-grow w-full ${!hidePublicNav ? "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" : ""}`}>
         {children}
       </main>

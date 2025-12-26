@@ -1,8 +1,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import {
-  ClipboardList, Trash2, Clock, Users, AlertCircle,
-  ShieldCheck, Phone, Loader2,
+  ClipboardList,
+  Trash2,
+  Clock,
+  Users,
+  AlertCircle,
+  ShieldCheck,
+  Phone,
+  Loader2,
 } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -70,7 +76,8 @@ export default function MyRequests() {
   const triggerVerifyDialog = (requestId: string, donorId: string) => {
     setDialogConfig({
       title: "Verify Donation?",
-      description: "Confirm that you have received blood from this donor. This will mark the request as fulfilled and update the donor's history.",
+      description:
+        "Confirm that you have received blood from this donor. This will mark the request as fulfilled and update the donor's history.",
       variant: "default",
       action: () => handleVerifyDonation(requestId, donorId),
     });
@@ -81,7 +88,8 @@ export default function MyRequests() {
   const triggerDeleteDialog = (id: string) => {
     setDialogConfig({
       title: "Delete Request?",
-      description: "Are you sure? This action cannot be undone. This request will be permanently removed from the live feed.",
+      description:
+        "Are you sure? This action cannot be undone. This request will be permanently removed from the live feed.",
       variant: "destructive",
       action: () => deleteRequest(id),
     });
@@ -121,21 +129,28 @@ export default function MyRequests() {
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4">
       <div className="max-w-5xl mx-auto">
-        
         {/* SHADCN ALERT DIALOG */}
         <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <AlertDialogContent className="rounded-[2rem]">
             <AlertDialogHeader>
-              <AlertDialogTitle className="text-xl font-black">{dialogConfig?.title}</AlertDialogTitle>
+              <AlertDialogTitle className="text-xl font-black">
+                {dialogConfig?.title}
+              </AlertDialogTitle>
               <AlertDialogDescription className="font-medium text-gray-500">
                 {dialogConfig?.description}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="gap-2">
-              <AlertDialogCancel className="rounded-xl font-bold">Cancel</AlertDialogCancel>
-              <AlertDialogAction 
+              <AlertDialogCancel className="rounded-xl font-bold">
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
                 onClick={dialogConfig?.action}
-                className={`rounded-xl font-black ${dialogConfig?.variant === 'destructive' ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'}`}
+                className={`rounded-xl font-black ${
+                  dialogConfig?.variant === "destructive"
+                    ? "bg-red-600 hover:bg-red-700"
+                    : "bg-green-600 hover:bg-green-700"
+                }`}
               >
                 Continue
               </AlertDialogAction>
@@ -149,7 +164,9 @@ export default function MyRequests() {
             <h1 className="text-3xl font-black text-gray-800 flex items-center gap-3">
               <ClipboardList className="text-red-600" /> My Blood Requests
             </h1>
-            <p className="text-gray-500 mt-1 font-medium">Manage your posts and verify incoming donors.</p>
+            <p className="text-gray-500 mt-1 font-medium">
+              Manage your posts and verify incoming donors.
+            </p>
           </div>
         </div>
 
@@ -161,26 +178,43 @@ export default function MyRequests() {
         ) : requests.length > 0 ? (
           <div className="grid grid-cols-1 gap-8">
             {requests.map((req) => (
-              <div key={req._id} className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden transition-all hover:shadow-md">
-                
+              <div
+                key={req._id}
+                className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden transition-all hover:shadow-md"
+              >
                 {/* Main Content Area */}
                 <div className="p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                   <div className="space-y-3">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="bg-red-600 text-white px-4 py-1.5 rounded-xl font-black text-lg">{req.bloodGroup}</span>
+                      <span className="bg-red-600 text-white px-4 py-1.5 rounded-xl font-black text-lg">
+                        {req.bloodGroup}
+                      </span>
                       {req.isUrgent && (
                         <span className="flex items-center gap-1 text-[10px] font-black text-red-600 bg-red-50 border border-red-100 px-2 py-1 rounded-lg uppercase tracking-wider animate-pulse">
                           <AlertCircle size={12} /> Emergency
                         </span>
                       )}
-                      <span className={`text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-wider border ${req.status === "Fulfilled" ? "bg-green-50 text-green-600 border-green-100" : "bg-orange-50 text-orange-600 border-orange-100"}`}>
+                      <span
+                        className={`text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-wider border ${
+                          req.status === "Fulfilled"
+                            ? "bg-green-50 text-green-600 border-green-100"
+                            : "bg-orange-50 text-orange-600 border-orange-100"
+                        }`}
+                      >
                         {req.status}
                       </span>
                     </div>
-                    <h3 className="text-2xl font-black text-gray-800">{req.patientName}</h3>
+                    <h3 className="text-2xl font-black text-gray-800">
+                      {req.patientName}
+                    </h3>
                     <div className="flex items-center gap-4 text-gray-400 text-sm">
-                      <p className="flex items-center gap-1"><Clock size={14} /> {new Date(req.createdAt).toLocaleDateString()}</p>
-                      <p className="flex items-center gap-1 font-bold text-gray-600">{req.unitsRequired} Units Required</p>
+                      <p className="flex items-center gap-1">
+                        <Clock size={14} />{" "}
+                        {new Date(req.createdAt).toLocaleDateString()}
+                      </p>
+                      <p className="flex items-center gap-1 font-bold text-gray-600">
+                        {req.unitsRequired} Units Required
+                      </p>
                     </div>
                   </div>
 
@@ -189,34 +223,55 @@ export default function MyRequests() {
                     disabled={deletingId === req._id}
                     className="p-4 bg-gray-50 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-2xl transition-all"
                   >
-                    {deletingId === req._id ? <Loader2 className="animate-spin" /> : <Trash2 size={24} />}
+                    {deletingId === req._id ? (
+                      <Loader2 className="animate-spin" />
+                    ) : (
+                      <Trash2 size={24} />
+                    )}
                   </button>
                 </div>
 
                 {/* Donor Section */}
                 <div className="bg-gray-50/70 border-t border-gray-100 p-8">
                   <h4 className="text-sm font-black text-gray-700 uppercase tracking-widest mb-6 flex items-center gap-2">
-                    <Users size={18} className="text-blue-600" /> Responded Donors ({req.potentialDonors?.length || 0})
+                    <Users size={18} className="text-blue-600" /> Responded
+                    Donors ({req.potentialDonors?.length || 0})
                   </h4>
 
                   {req.potentialDonors?.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {req.potentialDonors.map((donor) => (
-                        <div key={donor._id} className="bg-white border border-gray-200 p-5 rounded-[1.5rem] flex items-center justify-between shadow-sm">
+                        <div
+                          key={donor._id}
+                          className="bg-white border border-gray-200 p-5 rounded-[1.5rem] flex items-center justify-between shadow-sm"
+                        >
                           <div>
-                            <p className="font-bold text-gray-800">{donor.username}</p>
-                            <a href={`tel:${donor.phoneNumber}`} className="text-sm text-blue-600 font-bold flex items-center gap-1 hover:text-blue-800">
+                            <p className="font-bold text-gray-800">
+                              {donor.username}
+                            </p>
+                            <a
+                              href={`tel:${donor.phoneNumber}`}
+                              className="text-sm text-blue-600 font-bold flex items-center gap-1 hover:text-blue-800"
+                            >
                               <Phone size={12} /> {donor.phoneNumber}
                             </a>
                           </div>
                           {req.status === "Pending" && (
                             <button
-                              onClick={() => triggerVerifyDialog(req._id, donor._id)}
+                              onClick={() =>
+                                triggerVerifyDialog(req._id, donor._id)
+                              }
                               disabled={!!verifyingId}
                               className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-xs font-black flex items-center gap-2 transition-all active:scale-95 disabled:bg-gray-300"
                             >
-                              {verifyingId === donor._id ? <Loader2 className="animate-spin" size={14} /> : <ShieldCheck size={14} />}
-                              {verifyingId === donor._id ? "Processing..." : "Verify"}
+                              {verifyingId === donor._id ? (
+                                <Loader2 className="animate-spin" size={14} />
+                              ) : (
+                                <ShieldCheck size={14} />
+                              )}
+                              {verifyingId === donor._id
+                                ? "Processing..."
+                                : "Verify"}
                             </button>
                           )}
                         </div>
@@ -233,13 +288,18 @@ export default function MyRequests() {
           </div>
         ) : (
           <div className="text-center bg-white p-20 rounded-[3rem] shadow-sm border border-gray-100">
-             <div className="bg-red-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 text-red-600">
-               <ClipboardList size={48} />
-             </div>
-             <h2 className="text-2xl font-black text-gray-800">No Active Posts</h2>
-             <button onClick={() => (window.location.href = "/receiver/request")} className="mt-8 bg-red-600 text-white px-10 py-4 rounded-2xl font-black shadow-lg">
-               Post Request Now
-             </button>
+            <div className="bg-red-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 text-red-600">
+              <ClipboardList size={48} />
+            </div>
+            <h2 className="text-2xl font-black text-gray-800">
+              No Active Posts
+            </h2>
+            <button
+              onClick={() => (window.location.href = "/receiver/request")}
+              className="mt-8 bg-red-600 text-white px-10 py-4 rounded-2xl font-black shadow-lg"
+            >
+              Post Request Now
+            </button>
           </div>
         )}
       </div>
