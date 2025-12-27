@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { 
-  History, Calendar, MapPin, Award, ChevronRight,
+  History, Calendar, MapPin, Award,
   Droplets, CheckCircle, Loader2
 } from "lucide-react";
 import axios from "axios";
@@ -96,9 +96,6 @@ export default function DonationHistory() {
                   <div className="text-right hidden md:block">
                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Quantity</p>
                     <p className="text-lg font-black text-red-600">{record.units} Units</p>
-                  </div>
-                  <div className="bg-gray-50 p-3 rounded-2xl group-hover:bg-red-50 transition-colors">
-                    <ChevronRight className="text-gray-300 group-hover:text-red-600" />
                   </div>
                 </div>
               </div>
