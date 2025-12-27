@@ -1,54 +1,5 @@
-// import { NextResponse } from 'next/server';
-// import {connect} from '@/dbConfig/dbConfig';
-// import Donation from '@/models/donationModel';
-// import BloodRequest from '@/models/requestModel';
-// import User from '@/models/userModel';
-
-// export async function GET() {
-//   await connect();
-
-//   try {
-//     // 1. Total Counts
-//     const totalDonors = await User.countDocuments({ role: 'donor' });
-//     const pendingRequests = await BloodRequest.countDocuments({ status: 'Pending' });
-
-//     // 2. Inventory by Blood Group (Aggregation)
-//     const inventory = await Donation.aggregate([
-//       { $group: { _id: "$bloodGroup", totalUnits: { $sum: "$units" } } }
-//     ]);
-
-//     // 3. Donation Trends (Last 7 Days)
-//     const sevenDaysAgo = new Date();
-//     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    
-//     const trends = await Donation.aggregate([
-//       { $match: { createdAt: { $gte: sevenDaysAgo } } },
-//       { $group: { 
-//           _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-//           count: { $sum: 1 } 
-//       }},
-//       { $sort: { "_id": 1 } }
-//     ]);
-
-//     return NextResponse.json({
-//       stats: { totalDonors, pendingRequests },
-//       inventory,
-//       trends
-//     });
-//   } catch (error) {
-//     console.error('Failed to fetch data:', error);
-//     return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });
-//   }
-// }
-
-
-
-
-
-
 import { NextResponse } from 'next/server';
 import { connect } from '@/dbConfig/dbConfig';
-import Donation from '@/models/donationModel';
 import BloodRequest from '@/models/requestModel';
 import User from '@/models/userModel';
 
@@ -56,42 +7,53 @@ export async function GET() {
   await connect();
 
   try {
+    const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+
+    // 1. Basic Stats
     const totalDonors = await User.countDocuments({ role: 'donor' });
+    const totalReceivers = await User.countDocuments({ role: 'receiver' });
     const pendingRequests = await BloodRequest.countDocuments({ status: 'Pending' });
+    const completedRequests = await BloodRequest.countDocuments({ status: 'Fulfilled' });
 
-    // 1. Inventory Aggregation
-    // Ensure "bloodGroup" matches your Donation model exactly!
-    const inventory = await Donation.aggregate([
-      { $group: { _id: "$bloodGroup", totalUnits: { $sum: "$units" } } },
-      { $sort: { _id: 1 } } // Sort A, B, AB, O alphabetically
+    // 2. Inventory (Available Donors per Blood Group)
+    const donorStats = await User.aggregate([
+      { $match: { role: 'donor' } },
+      { $group: { _id: "$bloodGroup", count: { $sum: 1 } } }
     ]);
 
-    // 2. Trend Aggregation (Last 7 Days)
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setHours(0, 0, 0, 0); // Start from the beginning of the day
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    
-    const trends = await Donation.aggregate([
-      { $match: { createdAt: { $gte: sevenDaysAgo } } },
-      { $group: { 
-          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-          count: { $sum: 1 } 
-      }},
-      { $sort: { "_id": 1 } }
+    // 3. Demand (Total Requests per Blood Group)
+    const requestStats = await BloodRequest.aggregate([
+      { $group: { _id: "$bloodGroup", count: { $sum: 1 } } }
     ]);
 
-    // 3. Debugging (Check your terminal)
-    console.log("Inventory Found:", inventory.length);
-    console.log("Trends Found:", trends.length);
+    // Format data to ensure all groups exist for the charts
+    const inventoryMap = Object.fromEntries(donorStats.map(d => [d._id, d.count]));
+    const requestMap = Object.fromEntries(requestStats.map(r => [r._id, r.count]));
+
+    const formattedInventory = bloodGroups.map(bg => ({
+      _id: bg,
+      totalUnits: inventoryMap[bg] || 0
+    }));
+
+    const formattedRequests = bloodGroups.map(bg => ({
+      _id: bg,
+      totalUnits: requestMap[bg] || 0
+    }));
+
+    // Calculate fulfillment rate
+    const totalReq = await BloodRequest.countDocuments();
+    const fulfillmentRate = totalReq > 0 ? `${Math.round((completedRequests / totalReq) * 100)}%` : "0%";
 
     return NextResponse.json({
-      stats: { totalDonors, pendingRequests },
-      // Fallback: If inventory is empty, return an empty array so map() doesn't fail
-      inventory: inventory || [], 
-      trends: trends || []
+      stats: { totalDonors, totalReceivers, pendingRequests, fulfillmentRate },
+      inventory: formattedInventory,
+      requests: formattedRequests,
+      trends: { // Placeholder for time-based trends
+        donations: [{ _id: 'Mon', count: 5 }, { _id: 'Tue', count: 8 }], 
+        requests: [{ _id: 'Mon', count: 3 }, { _id: 'Tue', count: 12 }]
+      }
     });
-  } catch (error) {
-    console.error('Database Error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  } catch (error: any) {
+    return NextResponse.json({ error: "Failed to fetch data", message: error.message }, { status: 500 });
   }
 }
