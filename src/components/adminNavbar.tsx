@@ -17,7 +17,7 @@ export default function AdminNavbar() {
   const navItems = [
     { name: "Dashboard", href: "/admin", icon: <LayoutDashboard size={20} /> },
     { name: "User Management", href: "/admin/users", icon: <Users size={20} /> },
-    { name: "Verify Donors", href: "/admin/verifications", icon: <UserCheck size={20} /> },
+    { name: "Verifications", href: "/admin/verifications", icon: <UserCheck size={20} /> },
     { name: "Request Logs", href: "/admin/requests", icon: <ClipboardList size={20} /> },
     { name: "Analytics Reports", href: "/admin/reports", icon: <FileBarChart size={20} /> },
   ];
